@@ -1,44 +1,61 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en" data-theme="dark">
 <head>
-    <title>Calculator </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PK Calculator</title>
     <link rel="stylesheet" href="style.css">
-
 </head>
-
 <body>
-    
-    <div class="calculator">
-        <div class="calculator-card">
+
+    <div class="calculator-card">
         <div class="calc-header">
-            <span class="brand">PK - CALCULATOR</span>
-        <input class="display" id="display" placeholder="0" >
+            <button id="themeToggle" class="icon-btn" title="Toggle Theme">🌓</button>
+            <span class="brand">PK•CALC</span>
+            <button id="historyToggle" class="icon-btn" title="View History">📜</button>
+        </div>
+
+        <div class="display-container">
+            <div id="subDisplay" class="sub-display"></div>
+            <input class="display" id="display" placeholder="0" readonly>
+        </div>
+
+        <div id="historyDrawer" class="history-drawer hidden">
+            <div class="history-header">
+                <span>Recent History</span>
+                <button onclick="clearHistory()" class="text-btn">Clear</button>
+            </div>
+            <ul id="historyList"></ul>
+        </div>
+
         <div class="buttons">
-            <button onclick="appendToDisplay('(')">(</button>
-            <button onclick="appendToDisplay(')')">)</button>
-            <button onclick="clearLastElement()">CE</button>
-            <button onclick="clearDisplay()">C</button>
-            <button onclick="appendToDisplay('7')">7</button>
-            <button onclick="appendToDisplay('8')">8</button>
-            <button onclick="appendToDisplay('9')">9</button>
-            <button onclick="appendToDisplay('/')">/</button>
-            <button onclick="appendToDisplay('4')">4</button>
-            <button onclick="appendToDisplay('5')">5</button>
-            <button onclick="appendToDisplay('6')">6</button>
-            <button onclick="appendToDisplay('*')">*</button>
-            <button onclick="appendToDisplay('1')">1</button>
-            <button onclick="appendToDisplay('2')">2</button>
-            <button onclick="appendToDisplay('3')">3</button>
-            <button onclick="appendToDisplay('-')">-</button>
-            <button onclick="appendToDisplay('0')">0</button>
-            <button onclick="appendToDisplay('.')">.</button>
-            <button onclick="calculatorResult()">=</button>
-            <button onclick="appendToDisplay('+')">+</button>
+            <button class="btn fn" onclick="clearDisplay()">AC</button>
+            <button class="btn fn" onclick="clearLastElement()">⌫</button>
+            <button class="btn fn" onclick="appendToDisplay('%')">%</button>
+            <button class="btn op" onclick="appendToDisplay('/')">÷</button>
+
+            <button class="btn" onclick="appendToDisplay('7')">7</button>
+            <button class="btn" onclick="appendToDisplay('8')">8</button>
+            <button class="btn" onclick="appendToDisplay('9')">9</button>
+            <button class="btn op" onclick="appendToDisplay('*')">×</button>
+
+            <button class="btn" onclick="appendToDisplay('4')">4</button>
+            <button class="btn" onclick="appendToDisplay('5')">5</button>
+            <button class="btn" onclick="appendToDisplay('6')">6</button>
+            <button class="btn op" onclick="appendToDisplay('-')">−</button>
+
+            <button class="btn" onclick="appendToDisplay('1')">1</button>
+            <button class="btn" onclick="appendToDisplay('2')">2</button>
+            <button class="btn" onclick="appendToDisplay('3')">3</button>
+            <button class="btn op" onclick="appendToDisplay('+')">+</button>
+
+            <button class="btn" onclick="appendToDisplay('0')">0</button>
+            <button class="btn" onclick="appendToDisplay('.')">.</button>
+            <button class="btn fn" onclick="appendToDisplay('(')">(</button>
+            <button class="btn equal" onclick="calculatorResult()">=</button>
         </div>
     </div>
-            </div>
+
     <script src="script.js"></script>
 </body>
-
 </html>
