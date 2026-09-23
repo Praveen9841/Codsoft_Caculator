@@ -8,8 +8,22 @@
 </head>
 
 <body>
+    
     <div class="calculator">
-        <input class="display" id="display" value="">
+        <div class="calculator-card">
+        <div class="calc-header">
+            <span class="brand">PK - CALCULATOR</span>
+            <button id="historyToggle" class="icon-btn" title="View History">📜</button>
+        </div>
+            
+        <div id="historyDrawer" class="history-drawer hidden">
+            <div class="history-header">
+                <span>Recent History</span>
+                <button onclick="clearHistory()" class="text-btn">Clear</button>
+            </div>
+            <ul id="historyList"></ul>
+        </div>
+        <input class="display" id="display" placeholder="0" >
         <div class="buttons">
             <button onclick="appendToDisplay('(')">(</button>
             <button onclick="appendToDisplay(')')">)</button>
