@@ -1,24 +1,186 @@
-const display=document.getElementById("display")
+:root {
+    --bg-gradient: radial-gradient(circle at top left, #1e1b4b, #0f172a, #020617);
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --btn-bg: rgba(255, 255, 255, 0.08);
+    --btn-hover: rgba(255, 255, 255, 0.18);
+    --text-primary: #f8fafc;
+    --text-muted: #94a3b8;
+    --op-color: #38bdf8;
+    --equal-bg: linear-gradient(135deg, #6366f1, #a855f7);
+}
 
-function appendToDisplay(input)
-{
-    display.value+=input;
+[data-theme="light"] {
+    --bg-gradient: radial-gradient(circle at top left, #e0e7ff, #f1f5f9, #cbd5e1);
+    --card-bg: rgba(255, 255, 255, 0.7);
+    --card-border: rgba(255, 255, 255, 0.5);
+    --btn-bg: rgba(255, 255, 255, 0.8);
+    --btn-hover: rgba(255, 255, 255, 1);
+    --text-primary: #0f172a;
+    --text-muted: #64748b;
+    --op-color: #2563eb;
+    --equal-bg: linear-gradient(135deg, #4f46e5, #9333ea);
+}
 
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
-function clearDisplay()
-{
-    display.value=""
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--bg-gradient);
+    transition: background 0.4s ease;
 }
-function calculatorResult()
-{
-    try{
-    display.value=eval(display.value)
-    }
-    catch{
-        display.value="Error"
-    }
+
+.calculator-card {
+    position: relative;
+    width: 340px;
+    padding: 24px;
+    border-radius: 28px;
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
 }
-function clearLastElement()
-{
-    display.value=display.value.slice(0,-1)
+
+.calc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.brand {
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    font-weight: 700;
+}
+
+.icon-btn, .text-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+.display-container {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+.sub-display {
+    height: 18px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    overflow: hidden;
+}
+
+.display {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 2.2rem;
+    color: var(--text-primary);
+    text-align: right;
+    outline: none;
+    font-weight: 600;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.btn {
+    padding: 16px;
+    border-radius: 14px;
+    border: none;
+    font-size: 1.15rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--btn-bg);
+    color: var(--text-primary);
+    transition: transform 0.1s ease, background 0.2s ease;
+}
+
+.btn:active {
+    transform: scale(0.94);
+}
+
+.btn:hover {
+    background: var(--btn-hover);
+}
+
+.btn.op {
+    color: var(--op-color);
+    font-size: 1.3rem;
+}
+
+.btn.fn {
+    color: #f43f5e;
+}
+
+.btn.equal {
+    background: var(--equal-bg);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+}
+
+/* History Slider */
+.history-drawer {
+    position: absolute;
+    top: 65px;
+    left: 15px;
+    right: 15px;
+    height: 280px;
+    background: rgba(15, 23, 42, 0.95);
+    border-radius: 18px;
+    padding: 16px;
+    z-index: 10;
+    overflow-y: auto;
+    border: 1px solid var(--card-border);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+[data-theme="light"] .history-drawer {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.history-drawer.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+#historyList {
+    list-style: none;
+}
+
+#historyList li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--card-border);
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    cursor: pointer;
 }
