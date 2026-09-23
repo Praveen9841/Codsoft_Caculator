@@ -6,54 +6,6 @@ body{
     align-items: center;
 }
 
-.icon-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    color: var(--text-primary);
-    
-.history-drawer {
-    position: absolute;
-    top: 65px;
-    left: 15px;
-    right: 15px;
-    height: 280px;
-    background: rgba(15, 23, 42, 0.95);
-    border-radius: 18px;
-    padding: 16px;
-    z-index: 10;
-    overflow-y: auto;
-    border: 1px solid var(--card-border);
-    transition: opacity 0.25s ease, transform 0.25s ease;
-}
-
-.history-drawer.hidden {
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-8px);
-}
-
-.history-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-}
-
-#historyList {
-    list-style: none;
-}
-
-#historyList li {
-    padding: 8px 0;
-    border-bottom: 1px solid var(--card-border);
-    font-size: 0.9rem;
-    color: var(--text-primary);
-    cursor: pointer;
-}
-
 .calculator{
     width:300px;
     border-radius: 10px;
