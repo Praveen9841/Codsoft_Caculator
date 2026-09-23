@@ -1,186 +1,90 @@
-:root {
-    --bg-gradient: radial-gradient(circle at top left, #1e1b4b, #0f172a, #020617);
-    --card-bg: rgba(255, 255, 255, 0.05);
-    --card-border: rgba(255, 255, 255, 0.1);
-    --btn-bg: rgba(255, 255, 255, 0.08);
-    --btn-hover: rgba(255, 255, 255, 0.18);
-    --text-primary: #f8fafc;
-    --text-muted: #94a3b8;
-    --op-color: #38bdf8;
-    --equal-bg: linear-gradient(135deg, #6366f1, #a855f7);
+const display = document.getElementById('display');
+const subDisplay = document.getElementById('subDisplay');
+const historyDrawer = document.getElementById('historyDrawer');
+const historyList = document.getElementById('historyList');
+const themeToggle = document.getElementById('themeToggle');
+
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playClickSound() {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.05);
 }
 
-[data-theme="light"] {
-    --bg-gradient: radial-gradient(circle at top left, #e0e7ff, #f1f5f9, #cbd5e1);
-    --card-bg: rgba(255, 255, 255, 0.7);
-    --card-border: rgba(255, 255, 255, 0.5);
-    --btn-bg: rgba(255, 255, 255, 0.8);
-    --btn-hover: rgba(255, 255, 255, 1);
-    --text-primary: #0f172a;
-    --text-muted: #64748b;
-    --op-color: #2563eb;
-    --equal-bg: linear-gradient(135deg, #4f46e5, #9333ea);
+function appendToDisplay(char) {
+    playClickSound();
+    display.value += char;
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+function clearDisplay() {
+    playClickSound();
+    display.value = '';
+    subDisplay.textContent = '';
 }
 
-body {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: var(--bg-gradient);
-    transition: background 0.4s ease;
+function clearLastElement() {
+    playClickSound();
+    display.value = display.value.slice(0, -1);
 }
 
-.calculator-card {
-    position: relative;
-    width: 340px;
-    padding: 24px;
-    border-radius: 28px;
-    background: var(--card-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--card-border);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+function calculatorResult() {
+    playClickSound();
+    const expression = display.value;
+    if (!expression) return;
+
+    try {
+        const sanitized = expression.replace(/%/g, '/100');
+        const result = Function(`'use strict'; return (${sanitized})`)();
+
+        subDisplay.textContent = `${expression} =`;
+        display.value = Number.isInteger(result) ? result : parseFloat(result.toFixed(6));
+        saveHistory(`${expression} = ${display.value}`);
+    } catch {
+        display.value = 'Error';
+        setTimeout(() => { display.value = ''; }, 1200);
+    }
 }
 
-.calc-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
+function saveHistory(item) {
+    const li = document.createElement('li');
+    li.textContent = item;
+    li.onclick = () => {
+        display.value = item.split('=')[1].trim();
+        historyDrawer.classList.add('hidden');
+    };
+    historyList.prepend(li);
 }
 
-.brand {
-    font-size: 0.75rem;
-    letter-spacing: 2px;
-    color: var(--text-muted);
-    font-weight: 700;
+function clearHistory() {
+    historyList.innerHTML = '';
 }
 
-.icon-btn, .text-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    color: var(--text-primary);
-}
+document.getElementById('historyToggle').onclick = () => {
+    historyDrawer.classList.toggle('hidden');
+};
 
-.display-container {
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 16px;
-    padding: 12px 16px;
-    margin-bottom: 20px;
-    text-align: right;
-}
+themeToggle.onclick = () => {
+    const html = document.documentElement;
+    const nextTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', nextTheme);
+};
 
-.sub-display {
-    height: 18px;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    overflow: hidden;
-}
-
-.display {
-    width: 100%;
-    border: none;
-    background: transparent;
-    font-size: 2.2rem;
-    color: var(--text-primary);
-    text-align: right;
-    outline: none;
-    font-weight: 600;
-}
-
-.buttons {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-}
-
-.btn {
-    padding: 16px;
-    border-radius: 14px;
-    border: none;
-    font-size: 1.15rem;
-    font-weight: 600;
-    cursor: pointer;
-    background: var(--btn-bg);
-    color: var(--text-primary);
-    transition: transform 0.1s ease, background 0.2s ease;
-}
-
-.btn:active {
-    transform: scale(0.94);
-}
-
-.btn:hover {
-    background: var(--btn-hover);
-}
-
-.btn.op {
-    color: var(--op-color);
-    font-size: 1.3rem;
-}
-
-.btn.fn {
-    color: #f43f5e;
-}
-
-.btn.equal {
-    background: var(--equal-bg);
-    color: #fff;
-    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
-}
-
-/* History Slider */
-.history-drawer {
-    position: absolute;
-    top: 65px;
-    left: 15px;
-    right: 15px;
-    height: 280px;
-    background: rgba(15, 23, 42, 0.95);
-    border-radius: 18px;
-    padding: 16px;
-    z-index: 10;
-    overflow-y: auto;
-    border: 1px solid var(--card-border);
-    transition: opacity 0.25s ease, transform 0.25s ease;
-}
-
-[data-theme="light"] .history-drawer {
-    background: rgba(255, 255, 255, 0.95);
-}
-
-.history-drawer.hidden {
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-8px);
-}
-
-.history-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-}
-
-#historyList {
-    list-style: none;
-}
-
-#historyList li {
-    padding: 8px 0;
-    border-bottom: 1px solid var(--card-border);
-    font-size: 0.9rem;
-    color: var(--text-primary);
-    cursor: pointer;
-}
+window.addEventListener('keydown', (e) => {
+    if (/[0-9+\-*/().]/.test(e.key)) {
+        appendToDisplay(e.key);
+    } else if (e.key === 'Enter' || e.key === '=') {
+        calculatorResult();
+    } else if (e.key === 'Backspace') {
+        clearLastElement();
+    } else if (e.key === 'Escape') {
+        clearDisplay();
+    }
+});
